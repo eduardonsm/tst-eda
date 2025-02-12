@@ -1,32 +1,25 @@
-import java.util.*;
-public class Solution{
-        public static void main(String[] args){
-                Scanner sc = new Scanner(System.in);
-                String[] entrada = sc.nextLine().split(",");
-                insertionSort(entrada);
-        }
-        public static void insertionSort(String[] v){
-                for(int i = 0;i<v.length;i++){
-                int j=i;
-                while(j>0 && v[j].compareTo(v[j-1])<0){
-                        swap(j,j-1,v);
-                        j--;
-                }
-                printaLista(v);
+public int particiona(int[] v, int ini, int fim) {
 
-                }
-                }
-        public static void swap(int i,int j, String[] v){
-                String aux = v[i];
-                v[i] = v[j];
-                v[j] = aux;
-        }
-public static void printaLista(String[] lista){
-                String out =lista[0];
-                for(int i=1;i<lista.length;i++){
-                        out+=", "+lista[i];
-                }
-                System.out.println(out);
-        }
+	int i = ini + 1;
+	int j = fim;
+	int pivot = v[ini];
 
+	while (i <= j) {
+
+		// andando com i para frente. pára quando encontrar um valor maior que o pivot
+		while (i <= j && v[i] <= pivot)
+			i++;
+
+		// andando com j para trás. pára quando encontrar um valor menor ou igual ao pivot
+		while(i <= j && A[j] > pivot)
+                j = j - 1;
+         
+        // se i não encontrou j, troca
+        if (i < j)
+        	swap(v, i, j);
+
+	}
+
+	swap(v, ini, j);
+	return j;
 }
