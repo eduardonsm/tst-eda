@@ -9,10 +9,10 @@ public class Solution{
                 for(int i =0;i<entrada.length;i++){
                         numeros.push(Integer.parseInt(entrada[i]));
                 }
-                invertePilhaIndex(numeros,Integer.parseInt(indice),entrada.length);
+                maxPilha(numeros,Integer.parseInt(indice),entrada.length);
 
         }
-        public static void invertePilhaIndex(Pilha pilha,int indice,int tamPIlha){
+        public static void maxPilha(Pilha pilha,int indice,int tamPIlha){
                 Pilha aux = new Pilha(tamPIlha);
                 int maior = 0;
                 int elem = 0;
