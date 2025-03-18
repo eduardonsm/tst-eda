@@ -14,11 +14,12 @@ public class Solution{
 
         }
         public static void predecessor(BST bst,int no){
-            System.out.println(Arrays.toString(bst.predecessor(no)));
+            System.out.println(bst.predecessorString(no));
         }
 }
 
- class BST {
+ 
+class BST {
 
     private Node root;
     private int size;
@@ -26,7 +27,11 @@ public class Solution{
     public boolean isEmpty() {
         return this.root == null;
     }
-
+    
+    /**
+     * Implementação iterativa da adição de um elemento em uma árvore binária de pequisa.
+     * @param element o valor a ser adicionado na árvore.
+     */
     public void add(int element) {
         this.size += 1;
         if (isEmpty())
@@ -60,17 +65,15 @@ public class Solution{
         }
         
     }
-    public Node max() {
-        if (isEmpty()) return null;
-            
-        Node node = this.root;
-        while(node.right != null)
-            node = node.right;      
     
-        return node;
     
-    }
-   
+    /**
+     * Busca o nó cujo valor é igual ao passado como parâmetro. Essa é a implementação 
+     * iterativa clássica da busca binária em uma árvore binária de pesquisa.
+     * @param element O elemento a ser procurado.
+     * @return O nó contendo o elemento procurado. O método retorna null caso
+     * o elemento não esteja presente na árvore.
+     */
     public Node search(int element) {
         Node aux = this.root;
         while( aux!=null){
@@ -80,33 +83,158 @@ public class Solution{
         }
         return null;
     }
+    
+    
+    /**
+     * Retorna a altura da árvore.
+     */
+    public int height() {
+        return height(this.root);
+    }
 
-    public int[] predecessor(int no) {
-        Node inicial = this.search(no);
-        int i = 0;
-        int[] caminho = new int[size+1];
-        Node aux = inicial;
+    private int height(Node node) {
+        if(node == null) return -1;
+        else return 1 + Math.max(height(node.left), height(node.right));
+    }
 
-        if (aux.left != null){
-            while(aux.right != null){
-                caminho[i++] = aux.value;
-                aux = aux.right; 
-            }
-            
-        }
-             
-        else {
-            aux = inicial.parent;
-            while (aux != null && aux.value > inicial.value){
-                caminho[i++] = aux.value;
-                aux = aux.parent;
-
-            }
-                
-        }
-        return caminho;
+    public boolean equals(BST outra) {
+        return this.preOrder().equals(outra.preOrder());
+    }
+    private String preOrder() {
+        return preOrder(this.root).trim();
     }
     
+    private String preOrder(Node node) {
+        if (node == null) {
+            return "";
+        }
+        return node.value + " " + preOrder(node.left) + preOrder(node.right);
+    }
+
+    /**
+    * Retorna o número de folhas da árvore.
+    */
+    public int contaFolhas() {
+        if (this.root == null )return 0;
+        else return recContaFolhas(this.root);
+    }
+    private int recContaFolhas(Node aux){
+        if(aux.left==null && aux.right==null) return 1;
+        if (aux.left == null) return recContaFolhas(aux.right);
+        if (aux.right == null) return recContaFolhas(aux.left);
+        return recContaFolhas(aux.right)+recContaFolhas(aux.left);	    
+    
+    }
+    public Node min() {
+        if (isEmpty()) return null;
+        return min(this.root);
+    }
+    
+    /**
+     * Retorna o nó que contém o valor máximo da árvore cuja raiz é passada como parâmetro. Implementação recursiva.
+     * @param a raiz da árvore.
+     * @return o nó contendo o valor máximo da árvore ou null se a árvore estiver vazia.
+     */
+    private Node min(Node node) {
+        if (node.left == null) return node;
+        else return min(node.left);
+    }
+
+    /**
+     * Retorna o nó que contém o valor máximo da árvore. Implementação iterativa.
+     * @return o nó contendo o valor máximo da árvore ou null se a árvore estiver vazia.
+     */
+    public Node max() {
+        if (isEmpty()) return null;
+        
+        Node node = this.root;
+        while(node.right != null)
+            node = node.right;
+        
+        return node;
+    }
+    
+    /**
+     * Retorna o nó que contém o valor máximo da árvore cuja raiz é passada como parâmetro. Implementação recursiva.
+     * @param raiz da árvore.
+     * @return o nó contendo o valor máximo da árvore ou null se a árvore estiver vazia.
+     */
+    
+    private Node max(Node node) {
+        if (node.right == null) return node;
+        else return max(node.right);
+    }
+    
+    /**
+     * Retorna o nó cujo valor é predecessor do valor passado como parâmetro. 
+     * @param valor O nó para o qual deseja-se identificar o predecessor.
+     * @return O nó contendo o predecessor do valor passado como parâmetro. O método retorna null caso não haja 
+     * predecessor.
+     */
+    public Node predecessor(Node node) {
+        if (node == null) return null;
+        
+        if (node.left != null)
+            return max(node.left);
+        else {
+            Node aux = node.parent;
+            
+            while (aux != null && aux.value > node.value)
+                aux = aux.parent;
+            
+            return aux;
+        }
+    }
+    public String predecessorString(int indiceNo) {
+        Node node = this.search(indiceNo);
+        String out = "["+node.value;
+        
+        if (node.left != null){
+            Node aux = node.left;
+            out += ", "+aux.value;
+            while (aux.right!=null) {
+                aux=aux.right;
+                out += ", "+aux.value;
+            }
+        }
+        else {
+            Node aux = node.parent;
+            out += ", "+aux.value;
+            while (aux != null && aux.value > node.value){
+                aux = aux.parent;
+                out += ", "+aux.value;
+            }            
+        }
+        return out+"]";
+    }
+
+    
+    /**
+     * Retorna o nó cujo valor é sucessor do valor passado como parâmetro. 
+     * @param valor O valor para o qual deseja-se identificar o sucessor.
+     * @return O nó contendo o sucessor do valor passado como parâmetro. O método retorna null
+     * caso não haja sucessor.
+     */
+    public Node sucessor(Node node) {
+        if (node == null) return null;
+        
+        if (node.right != null)
+            return min(node.right);
+        else {
+            Node aux = node.parent;
+            
+            while (aux != null && aux.value < node.value)
+                aux = aux.parent;
+            
+            return aux;
+        }
+    }
+    /**
+     * @return o tamanho da árvore.
+     */
+    public int size() {
+        return this.size;
+    }
     
 }
 
