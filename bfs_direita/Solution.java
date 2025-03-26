@@ -13,7 +13,7 @@ public class Solution{
 
         }
         public static void bfsDireita(BST bst){
-            System.out.println(bst.bfsDireita());
+            System.out.println(bst.bfsDireita().trim());
         }
 }
 
