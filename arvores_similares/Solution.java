@@ -1,0 +1,127 @@
+import java.util.*;
+public class Solution{
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tamanho = sc.nextInt();
+		BST tree = new BST();
+		for (int i = 0; i < tamanho; i++) {
+            int n = sc.nextInt();
+            tree.add(n);
+        }
+		BST tree2 = new BST();
+		for (int i = 0; i < tamanho; i++) {
+            int n = sc.nextInt();
+            tree2.add(n);
+        }
+
+		similares(tree,tree2);
+	}
+	public static void similares(BST tree, BST tree2){
+		if (checkSimilar(tree.root,tree2.root)) {
+            System.out.println("Arvores similares.");
+        }else{
+            System.out.println("Arvores com estruturas diferentes.");
+        }
+	}
+	public static boolean checkSimilar(Node node1, Node node2){
+		if (node1 == null && node2 == null) return true;
+
+    if (node1 == null || node2 == null) return false;
+
+    boolean esquerdaSemelhante = checkSimilar(node1.left, node2.left);
+    boolean direitaSemelhante = checkSimilar(node1.rigth, node2.rigth);
+
+    return esquerdaSemelhante && direitaSemelhante;
+
+        
+	}
+}
+class BST{
+	public Node root;
+	public BST(){
+		this.root = null;
+	}
+	public boolean isEmpty() {return this.root==null;}
+    public int height(){
+        return height(this.root);
+    }
+    private int height(Node node){
+        if (node==null) {
+            return -1;
+        }
+        return 1+Math.max(height(node.left),height(node.rigth));
+    }
+	public void add(int v){
+		if (isEmpty()) {
+			this.root=new Node(v);
+		}else{
+			recAdd(this.root,v);
+		}
+	}
+	private void recAdd(Node node,int elem){
+		if (elem>node.value) {
+			if (node.rigth==null) {
+				Node newNode = new Node(elem);
+				node.rigth = newNode;
+				newNode.parent = node;
+				return;
+			} 
+			recAdd(node.rigth, elem);
+		}
+		else if (elem<node.value) {
+			if (node.left==null) {
+				Node newNode = new Node(elem);
+				node.left = newNode;
+				newNode.parent = node;
+				return;
+			} 
+			recAdd(node.left, elem);
+		}
+	}
+	public int valorProximo(int n){
+		return recValorProximo(this.root,n,this.root).value;
+		
+	}
+	public Node recValorProximo(Node node, int n, Node menor){
+		if (node==null) {
+			return menor;
+		}
+		if (dif(node, n) < dif(menor, n)) {
+			menor=node;
+		}
+		if (n<node.value) return recValorProximo(node.left, n, menor);
+		else return recValorProximo(node.rigth, n, menor);
+			
+		
+	}
+	public int dif(Node node, int n){
+		return Math.abs(node.value - n);
+	}
+
+	public ArrayList<Integer> preOrdem(){
+		ArrayList<Integer> lista = new ArrayList<Integer>();
+		recPreordem(this.root,lista);
+		return lista;
+	}
+	public void recPreordem(Node node,ArrayList<Integer> lista){
+		if (node!=null) {
+			lista.add(node.value);
+			recPreordem(node.left,lista);
+			recPreordem(node.rigth,lista);
+		}
+		
+	}
+
+}
+class Node{
+	public Node parent;
+	public Node rigth;
+	public Node left;
+	public int value;
+	public Node(int v){
+		this.value = v;
+		this.left = null;
+		this.rigth = null;
+		this.parent = null;
+	}
+}
